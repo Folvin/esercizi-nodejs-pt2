@@ -7,7 +7,7 @@ const express_1 = __importDefault(require("express"));
 require("express-async-errors");
 const app = (0, express_1.default)();
 const games = [{ name: "league of legends", releaseYear: 2009 }, { name: "monster hunter world", releaseYear: 2018 }];
-app.get("/", async (request, response) => {
+app.get("/games", async (request, response) => {
     response.json(games);
 });
 exports.default = app;

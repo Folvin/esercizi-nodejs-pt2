@@ -4,9 +4,9 @@ import app from "./app";
 
 const request = supertest(app);
 
-test("GET /", async () => {
+test("GET /games", async () => {
   const response = await request
-    .get("/")
+    .get("/games")
     .expect(200)
     .expect("Content-Type", /application\/json/);
   expect(response.body).toEqual([
