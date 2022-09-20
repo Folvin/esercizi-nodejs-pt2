@@ -1,16 +1,33 @@
 import supertest from "supertest";
-
+import {prismaMock} from "./lib/prisma/client.mock";
 import app from "./app";
 
 const request = supertest(app);
 
 test("GET /games", async () => {
+  const games = [
+    {
+      id: 1,
+      game: "league of legends",
+      releaseYear: 2009,
+      createdAt: "2022-09-18T16:39:10.492Z",
+      updatedAt: "2022-09-18T16:39:18.352Z",
+    },
+    {
+      id: 2,
+      game: "monster hunter world",
+      releaseYear: 2018,
+      createdAt: "2022-09-18T16:40:02.913Z",
+      updatedAt: "2022-09-18T16:39:44.199Z",
+    },
+  ];
+
+  //@ts-ignore
+  prismaMock.games.findMany.mockResolvedValue(games);
+
   const response = await request
     .get("/games")
     .expect(200)
     .expect("Content-Type", /application\/json/);
-  expect(response.body).toEqual([
-    {name: "league of legends", releaseYear: 2009},
-    {name: "monster hunter world", releaseYear: 2018},
-  ]);
+  expect(response.body).toEqual(games);
 });

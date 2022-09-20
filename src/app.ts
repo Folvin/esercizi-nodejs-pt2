@@ -1,13 +1,12 @@
 import express from "express";
 import "express-async-errors";
+import prisma from "./lib/prisma/client";
 
 const app = express();
 
-const games = [{name: "league of legends", releaseYear: 2009}, {name: "monster hunter world", releaseYear: 2018}]
-
 app.get("/games", async (request, response) => {
-
-  response.json(games);
+  const body = await prisma.games.findMany();
+  response.json(body);
 });
 
 export default app;
