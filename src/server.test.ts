@@ -31,3 +31,17 @@ test("GET /games", async () => {
     .expect("Content-Type", /application\/json/);
   expect(response.body).toEqual(games);
 });
+
+test("POST /games", async () => {
+  const game = {
+    game: "league of legends",
+    releaseYear: 2009,
+  };
+
+  const response = await request
+    .post("/games")
+    .send(game)
+    .expect(201)
+    .expect("Content-Type", /application\/json/);
+  expect(response.body).toEqual(game);
+});
