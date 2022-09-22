@@ -27,7 +27,11 @@ const validator = new express_json_validator_middleware_1.Validator({});
 exports.validate = validator.validate;
 const validationErrorMiddleware = (error, request, response, next) => {
     if (error instanceof express_json_validator_middleware_1.ValidationError) {
-        response.status(422);
+        response.status(422).send({ errors: error.validationErrors });
+        next();
+    }
+    else {
+        next(error);
     }
 };
 exports.validationErrorMiddleware = validationErrorMiddleware;

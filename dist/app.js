@@ -17,4 +17,5 @@ app.post("/games", (0, validation_1.validate)({ body: validation_1.gameSchema })
     const game = request.body;
     response.status(201).json(game);
 });
+app.use(validation_1.validationErrorMiddleware);
 exports.default = app;
