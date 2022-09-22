@@ -32,16 +32,35 @@ test("GET /games", async () => {
   expect(response.body).toEqual(games);
 });
 
-test("POST /games", async () => {
-  const game = {
-    game: "league of legends",
-    releaseYear: 2009,
-  };
+describe("POST /games", () => {
+  test("valid request", async () => {
+    const game = {
+      game: "league of legends",
+      releaseYear: 2009,
+    };
 
-  const response = await request
-    .post("/games")
-    .send(game)
-    .expect(201)
-    .expect("Content-Type", /application\/json/);
-  expect(response.body).toEqual(game);
+    const response = await request
+      .post("/games")
+      .send(game)
+      .expect(201)
+      .expect("Content-Type", /application\/json/);
+    expect(response.body).toEqual(game);
+  });
+
+  test("invalid request", async () => {
+    const game = {
+      releaseYear: 2009,
+    };
+
+    const response = await request
+      .post("/games")
+      .send(game)
+      .expect(422)
+      .expect("Content-Type", /application\/json/);
+    expect(response.body).toEqual({
+      errors: {
+        body: expect.any(Array),
+      },
+    });
+  });
 });
