@@ -15,7 +15,10 @@ app.get("/games", async (request, response) => {
 });
 
 app.post("/games", validate({body: gameSchema}), async (request, response) => {
-  const game: GameData = request.body;
+  const gameData: GameData = request.body;
+  const game = await prisma.games.create({
+    data: gameData
+  })
   response.status(201).json(game);
 });
 
