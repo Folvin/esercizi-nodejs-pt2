@@ -14,7 +14,10 @@ app.get("/games", async (request, response) => {
     response.json(body);
 });
 app.post("/games", (0, validation_1.validate)({ body: validation_1.gameSchema }), async (request, response) => {
-    const game = request.body;
+    const gameData = request.body;
+    const game = await client_1.default.games.create({
+        data: gameData
+    });
     response.status(201).json(game);
 });
 app.use(validation_1.validationErrorMiddleware);
