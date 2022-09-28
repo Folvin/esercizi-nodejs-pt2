@@ -191,3 +191,31 @@ describe("PUT /games/:id", () => {
     expect(response.text).toContain("Cannot PUT /games/asdf");
   });
 });
+
+describe("DELETE  /games/:id", () => {
+  test("Valid id", async () => {
+    const response = await request.delete("/games/1").expect(204);
+    expect(response.text).toEqual("");
+  });
+
+  test("unexisting id", async () => {
+    //@ts-ignore
+    prismaMock.games.delete.mockRejectedValue(new Error("Error"));
+
+    const response = await request
+      .delete("/games/1000")
+      .expect(404)
+      .expect("Content-Type", /text\/html/);
+
+    expect(response.text).toContain("Cannot DELETE /games/1000");
+  });
+
+  test("invalid id (NaN)", async () => {
+    const response = await request
+      .delete("/games/asdf")
+      .expect(404)
+      .expect("Content-Type", /text\/html/);
+
+    expect(response.text).toContain("Cannot DELETE /games/asdf");
+  });
+});

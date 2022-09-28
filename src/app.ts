@@ -63,6 +63,20 @@ app.put(
   }
 );
 
+app.delete("/games/:id(\\d+)", async (request, response, next) => {
+  const gameId = Number(request.params.id);
+
+  try {
+    await prisma.games.delete({
+      where: {id: gameId},
+    });
+
+    response.status(204).end();
+  } catch (error) {
+    response.status(404);
+    next(`Cannot DELETE /games/${gameId}`);
+  }
+});
 app.use(validationErrorMiddleware);
 
 export default app;

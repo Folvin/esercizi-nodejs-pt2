@@ -46,5 +46,18 @@ app.put("/games/:id(\\d+)", (0, validation_1.validate)({ body: validation_1.game
         next(`Cannot PUT /games/${gameId}`);
     }
 });
+app.delete("/games/:id(\\d+)", async (request, response, next) => {
+    const gameId = Number(request.params.id);
+    try {
+        await client_1.default.games.delete({
+            where: { id: gameId },
+        });
+        response.status(204).end();
+    }
+    catch (error) {
+        response.status(404);
+        next(`Cannot DELETE /games/${gameId}`);
+    }
+});
 app.use(validation_1.validationErrorMiddleware);
 exports.default = app;
