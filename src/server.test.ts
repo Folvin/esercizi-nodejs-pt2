@@ -34,6 +34,47 @@ describe("GET /games", () => {
    });
 });
 
+describe("GET /games/:id", () => {
+   test("Valid id", async () => {
+      const game = {
+         id: 1,
+         game: "league of legends",
+         releaseYear: 2009,
+         createdAt: "2022-09-18T16:39:10.492Z",
+         updatedAt: "2022-09-18T16:39:18.352Z",
+      };
+
+      //@ts-ignore
+      prismaMock.games.findUnique.mockResolvedValue(game);
+
+      const response = await request
+         .get("/games/1")
+         .expect(200)
+         .expect("Content-Type", /application\/json/);
+      expect(response.body).toEqual(game);
+   });
+   test("unexisting id", async () => {
+      //@ts-ignore
+      prismaMock.games.findUnique.mockResolvedValue(null);
+
+      const response = await request
+         .get("/games/1000")
+         .expect(404)
+         .expect("Content-Type", /text\/html/);
+
+      expect(response.text).toContain("Cannot GET /games/1000");
+   });
+
+   test("invalid id", async () => {
+      const response = await request
+         .get("/games/asdf")
+         .expect(404)
+         .expect("Content-Type", /text\/html/);
+
+      expect(response.text).toContain("Cannot GET /games/asdf");
+   });
+});
+
 describe("POST /games", () => {
    test("valid request", async () => {
       const game = {
