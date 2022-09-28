@@ -29,7 +29,9 @@ describe("GET /games", () => {
     const response = await request
       .get("/games")
       .expect(200)
-      .expect("Content-Type", /application\/json/);
+      .expect("Content-Type", /application\/json/)
+      .expect("Access-Control-Allow-Origin", "http://localhost:8080");
+
     expect(response.body).toEqual(games);
   });
 });
@@ -50,7 +52,9 @@ describe("GET /games/:id", () => {
     const response = await request
       .get("/games/1")
       .expect(200)
-      .expect("Content-Type", /application\/json/);
+      .expect("Content-Type", /application\/json/)
+      .expect("Access-Control-Allow-Origin", "http://localhost:8080");
+
     expect(response.body).toEqual(game);
   });
   test("unexisting id", async () => {
@@ -95,7 +99,9 @@ describe("POST /games", () => {
         releaseYear: 2009,
       })
       .expect(201)
-      .expect("Content-Type", /application\/json/);
+      .expect("Content-Type", /application\/json/)
+      .expect("Access-Control-Allow-Origin", "http://localhost:8080");
+
     expect(response.body).toEqual(game);
   });
 
@@ -139,7 +145,9 @@ describe("PUT /games/:id", () => {
         rating: 9,
       })
       .expect(200)
-      .expect("Content-Type", /application\/json/);
+      .expect("Content-Type", /application\/json/)
+      .expect("Access-Control-Allow-Origin", "http://localhost:8080");
+
     expect(response.body).toEqual(game);
   });
 
@@ -194,7 +202,11 @@ describe("PUT /games/:id", () => {
 
 describe("DELETE  /games/:id", () => {
   test("Valid id", async () => {
-    const response = await request.delete("/games/1").expect(204);
+    const response = await request
+      .delete("/games/1")
+      .expect(204)
+      .expect("Access-Control-Allow-Origin", "http://localhost:8080");
+
     expect(response.text).toEqual("");
   });
 
