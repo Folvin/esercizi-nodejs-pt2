@@ -31,5 +31,20 @@ app.post("/games", (0, validation_1.validate)({ body: validation_1.gameSchema })
     });
     response.status(201).json(game);
 });
+app.put("/games/:id(\\d+)", (0, validation_1.validate)({ body: validation_1.gameSchema }), async (request, response, next) => {
+    const gameId = Number(request.params.id);
+    const gameData = request.body;
+    try {
+        const game = await client_1.default.games.update({
+            where: { id: gameId },
+            data: gameData,
+        });
+        response.status(200).json(game);
+    }
+    catch (error) {
+        response.status(404);
+        next(`Cannot PUT /games/${gameId}`);
+    }
+});
 app.use(validation_1.validationErrorMiddleware);
 exports.default = app;
