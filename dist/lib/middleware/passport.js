@@ -7,10 +7,11 @@ exports.passport = void 0;
 const passport_1 = __importDefault(require("passport"));
 exports.passport = passport_1.default;
 const passport_github2_1 = __importDefault(require("passport-github2"));
+const config_1 = __importDefault(require("../../config"));
 const githubStrategy = new passport_github2_1.default.Strategy({
-    clientID: "",
-    clientSecret: "",
-    callbackURL: "",
+    clientID: config_1.default.GITHUB_CLIENT_ID,
+    clientSecret: config_1.default.GITHUB_CLIENT_SECRET,
+    callbackURL: config_1.default.GITHUB_CALLBACK_URL,
 }, function (accessToken, refreshToken, profile, done) {
     const user = {
         username: profile.username,
