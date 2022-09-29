@@ -237,7 +237,6 @@ describe("DELETE  /games/:id", () => {
  * questi test utilizzano: src/lib/middleware/multer.mock.ts
  * usano il multer.memoryStorage in modo tale da non salvare nessun file nel disco.
  */
-
 describe("POST /games/:id/photo", () => {
   test("valid request with png", async () => {
     await request
@@ -245,6 +244,18 @@ describe("POST /games/:id/photo", () => {
       .attach("photo", "test-fixtures/photos/randomFile.png")
       .expect(201)
       .expect("Access-Control-Allow-Origin", "http://localhost:8080");
+  });
+
+  test("unexisting id", async () => {
+    // @ts-ignore
+    prismaMock.games.update.mockRejectedValue(new Error("Error"));
+    const response = await request
+      .post("/games/1000/photo")
+      .attach("photo", "test-fixtures/photos/randomFile.png")
+      .expect(404)
+      .expect("Content-Type", /text\/html/);
+
+    expect(response.text).toContain("Cannot POST /games/1000/photo");
   });
 
   test("invalid id (NaN)", async () => {

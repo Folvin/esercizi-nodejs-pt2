@@ -72,8 +72,20 @@ app.post("/games/:id(\\d+)/photo", upload.single("photo"), async (request, respo
         response.status(400);
         return next("No photo file uploaded");
     }
+    const gameId = Number(request.params.id);
     const photoFilename = request.file.filename;
-    response.status(201).json({ photoFilename });
+    try {
+        await client_1.default.games.update({
+            where: { id: gameId },
+            data: { photoFilename },
+        });
+        response.status(201).json({ photoFilename });
+    }
+    catch (error) {
+        response.status(404);
+        next(`Cannot POST /games/${gameId}/photo`);
+    }
 });
+app.use("/games/photos", express_1.default.static("uploads"));
 app.use(validation_1.validationErrorMiddleware);
 exports.default = app;

@@ -15,6 +15,7 @@ model Games {
   game                    String                @db.VarChar(255)
   releaseYear             Int
   rating                  Int?
+  photoFilename           String?               @db.VarChar(255)
   createdAt               DateTime              @default(now())
   updatedAt               DateTime              @updatedAt
 }
