@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <form action="http://localhost:3000/games" id="form-add">
+      <label>
+        <strong>Game:</strong>
+        <input type="text" name="game" />
+      </label>
+
+      <label>
+        <strong>Release year:</strong>
+        <input type="number" name="releaseYear" />
+      </label>
+
+      <input type="submit" value="Add game" />
+    </form>
+
+    <script>
+      async function addGame(event) {
+        event.preventDefault();
+
+        const form = event.currentTarget;
+
+        const formData = new FormData(form);
+        const plainFormData = Object.fromEntries(formData.entries());
+        const formDataJsonString = JSON.stringify(plainFormData);
+
+        const url = form.action;
+
+        const response = await fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: formDataJsonString,
+        });
+
+        const game = await response.json();
+
+        console.dir(game);
+      }
+
+      const addForm = document.getElementById("form-add");
+
+      addForm.addEventListener("submit", addGame)
+    </script>
+  </body>
+</html>
