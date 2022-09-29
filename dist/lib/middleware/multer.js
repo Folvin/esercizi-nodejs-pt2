@@ -20,7 +20,22 @@ const storage = multer_1.default.diskStorage({
         return callback(null, (0, exports.generatePhotoFilename)(file.mimetype));
     },
 });
-exports.multerOptions = {};
+const MAX_SIZE_IN_MEGABYTES = 8 * 1024 * 1024;
+const VALID_MIME_TYPES = ["image/png", "image/jpeg"];
+const fileFilter = (request, file, callback) => {
+    if (VALID_MIME_TYPES.includes(file.mimetype)) {
+        callback(null, true);
+    }
+    else {
+        callback(new Error("Error: the uploaded file must be a JPG or a PNG image"));
+    }
+};
+exports.multerOptions = {
+    fileFilter,
+    limits: {
+        fileSize: MAX_SIZE_IN_MEGABYTES,
+    },
+};
 const initMulterMiddleware = () => {
     return (0, multer_1.default)({ storage, ...exports.multerOptions });
 };

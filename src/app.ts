@@ -4,12 +4,7 @@ import cors from "cors";
 
 import prisma from "./lib/prisma/client";
 
-import {
-  validate,
-  gameSchema,
-  GameData,
-  validationErrorMiddleware,
-} from "./lib/validation";
+import {validate, gameSchema, GameData, validationErrorMiddleware} from "./lib/validation";
 
 import {initMulterMiddleware} from "./lib/middleware/multer";
 
@@ -54,25 +49,21 @@ app.post("/games", validate({body: gameSchema}), async (request, response) => {
   response.status(201).json(game);
 });
 
-app.put(
-  "/games/:id(\\d+)",
-  validate({body: gameSchema}),
-  async (request, response, next) => {
-    const gameId = Number(request.params.id);
-    const gameData: GameData = request.body;
+app.put("/games/:id(\\d+)", validate({body: gameSchema}), async (request, response, next) => {
+  const gameId = Number(request.params.id);
+  const gameData: GameData = request.body;
 
-    try {
-      const game = await prisma.games.update({
-        where: {id: gameId},
-        data: gameData,
-      });
-      response.status(200).json(game);
-    } catch (error) {
-      response.status(404);
-      next(`Cannot PUT /games/${gameId}`);
-    }
+  try {
+    const game = await prisma.games.update({
+      where: {id: gameId},
+      data: gameData,
+    });
+    response.status(200).json(game);
+  } catch (error) {
+    response.status(404);
+    next(`Cannot PUT /games/${gameId}`);
   }
-);
+});
 
 app.delete("/games/:id(\\d+)", async (request, response, next) => {
   const gameId = Number(request.params.id);
@@ -89,35 +80,28 @@ app.delete("/games/:id(\\d+)", async (request, response, next) => {
   }
 });
 
-app.post(
-  "/games/:id(\\d+)/photo",
-  upload.single("photo"),
-  async (request, response, next) => {
-    console.log("request.file", request.file);
-
-    if (!request.file) {
-      response.status(400);
-      return next("No photo file uploaded");
-    }
-
-    const gameId = Number(request.params.id);
-    const photoFilename = request.file.filename;
-
-    try {
-      await prisma.games.update({
-        where: {id: gameId},
-        data: {photoFilename},
-      });
-      response.status(201).json({photoFilename});
-
-    } catch (error) {
-      response.status(404);
-      next(`Cannot POST /games/${gameId}/photo`);
-    }
+app.post("/games/:id(\\d+)/photo", upload.single("photo"), async (request, response, next) => {
+  if (!request.file) {
+    response.status(400);
+    return next("No photo file uploaded");
   }
-);
 
-app.use("/games/photos", express.static("uploads"))
+  const gameId = Number(request.params.id);
+  const photoFilename = request.file.filename;
+
+  try {
+    await prisma.games.update({
+      where: {id: gameId},
+      data: {photoFilename},
+    });
+    response.status(201).json({photoFilename});
+  } catch (error) {
+    response.status(404);
+    next(`Cannot POST /games/${gameId}/photo`);
+  }
+});
+
+app.use("/games/photos", express.static("uploads"));
 
 app.use(validationErrorMiddleware);
 

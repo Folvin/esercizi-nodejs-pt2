@@ -203,10 +203,7 @@ describe("PUT /games/:id", () => {
 
 describe("DELETE  /games/:id", () => {
   test("Valid id", async () => {
-    const response = await request
-      .delete("/games/1")
-      .expect(204)
-      .expect("Access-Control-Allow-Origin", "http://localhost:8080");
+    const response = await request.delete("/games/1").expect(204).expect("Access-Control-Allow-Origin", "http://localhost:8080");
 
     expect(response.text).toEqual("");
   });
@@ -238,12 +235,28 @@ describe("DELETE  /games/:id", () => {
  * usano il multer.memoryStorage in modo tale da non salvare nessun file nel disco.
  */
 describe("POST /games/:id/photo", () => {
-  test("valid request with png", async () => {
+  test("valid request with PNG", async () => {
     await request
       .post("/games/1000/photo")
       .attach("photo", "test-fixtures/photos/randomFile.png")
       .expect(201)
       .expect("Access-Control-Allow-Origin", "http://localhost:8080");
+  });
+  test("valid request with JPG", async () => {
+    await request
+      .post("/games/1000/photo")
+      .attach("photo", "test-fixtures/photos/randomFile.jpg")
+      .expect(201)
+      .expect("Access-Control-Allow-Origin", "http://localhost:8080");
+  });
+
+  test("invalid request with TXT", async () => {
+    const response = await request
+      .post("/games/1000/photo")
+      .attach("photo", "test-fixtures/photos/file.txt")
+      .expect(500)
+      .expect("Content-Type", /text\/html/);
+    expect(response.text).toContain("Error: the uploaded file must be a JPG or a PNG image");
   });
 
   test("unexisting id", async () => {
