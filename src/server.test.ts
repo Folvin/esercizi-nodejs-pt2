@@ -1,6 +1,7 @@
 import supertest from "supertest";
 import {prismaMock} from "./lib/prisma/client.mock";
 import app from "./app";
+import {text} from "node:stream/consumers";
 
 const request = supertest(app);
 
@@ -229,5 +230,36 @@ describe("DELETE  /games/:id", () => {
       .expect("Content-Type", /text\/html/);
 
     expect(response.text).toContain("Cannot DELETE /games/asdf");
+  });
+});
+
+/**
+ * questi test utilizzano: src/lib/middleware/multer.mock.ts
+ * usano il multer.memoryStorage in modo tale da non salvare nessun file nel disco.
+ */
+
+describe("POST /games/:id/photo", () => {
+  test("valid request with png", async () => {
+    await request
+      .post("/games/1000/photo")
+      .attach("photo", "test-fixtures/photos/randomFile.png")
+      .expect(201)
+      .expect("Access-Control-Allow-Origin", "http://localhost:8080");
+  });
+
+  test("invalid id (NaN)", async () => {
+    const response = await request
+      .post("/games/asdf/photo")
+      .expect(404)
+      .expect("Content-Type", /text\/html/);
+    expect(response.text).toContain("Cannot POST /games/asdf/photo");
+  });
+
+  test("invalid, no file upload", async () => {
+    const response = await request
+      .post("/games/1000/photo")
+      .expect(400)
+      .expect("Content-Type", /text\/html/);
+    expect(response.text).toContain("No photo file uploaded");
   });
 });
