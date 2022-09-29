@@ -2,7 +2,7 @@ import express, {Router} from "express";
 
 import prisma from "../lib/prisma/client";
 
-import {validate, gameSchema, GameData} from "../lib/validation";
+import {validate, gameSchema, GameData} from "../lib/middleware/validation";
 
 import {initMulterMiddleware} from "../lib/middleware/multer";
 

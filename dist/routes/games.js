@@ -28,7 +28,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importStar(require("express"));
 const client_1 = __importDefault(require("../lib/prisma/client"));
-const validation_1 = require("../lib/validation");
+const validation_1 = require("../lib/middleware/validation");
 const multer_1 = require("../lib/middleware/multer");
 const upload = (0, multer_1.initMulterMiddleware)();
 const router = (0, express_1.Router)();
