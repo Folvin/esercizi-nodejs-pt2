@@ -7,6 +7,7 @@ import {initSessionMiddleware} from "./lib/middleware/session";
 import {passport} from "./lib/middleware/passport";
 
 import gamesRoutes from "./routes/games";
+import authRoutes from "./routes/auth";
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use(express.json());
 app.use(initCorsMiddleware());
 
 app.use("/games", gamesRoutes);
+app.use("/auth", authRoutes);
 
 app.use(validationErrorMiddleware);
 

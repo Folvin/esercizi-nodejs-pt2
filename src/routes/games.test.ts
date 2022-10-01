@@ -32,7 +32,8 @@ describe("GET /games", () => {
       .get("/games")
       .expect(200)
       .expect("Content-Type", /application\/json/)
-      .expect("Access-Control-Allow-Origin", "http://localhost:8080");
+      .expect("Access-Control-Allow-Origin", "http://localhost:8080")
+      .expect("Access-Control-Allow-Credentials", "true");
 
     expect(response.body).toEqual(games);
   });
@@ -54,8 +55,7 @@ describe("GET /games/:id", () => {
     const response = await request
       .get("/games/1")
       .expect(200)
-      .expect("Content-Type", /application\/json/)
-      .expect("Access-Control-Allow-Origin", "http://localhost:8080");
+      .expect("Content-Type", /application\/json/);
 
     expect(response.body).toEqual(game);
   });
@@ -102,7 +102,8 @@ describe("POST /games", () => {
       })
       .expect(201)
       .expect("Content-Type", /application\/json/)
-      .expect("Access-Control-Allow-Origin", "http://localhost:8080");
+      .expect("Access-Control-Allow-Origin", "http://localhost:8080")
+      .expect("Access-Control-Allow-Credentials", "true");
 
     expect(response.body).toEqual(game);
   });
@@ -148,7 +149,8 @@ describe("PUT /games/:id", () => {
       })
       .expect(200)
       .expect("Content-Type", /application\/json/)
-      .expect("Access-Control-Allow-Origin", "http://localhost:8080");
+      .expect("Access-Control-Allow-Origin", "http://localhost:8080")
+      .expect("Access-Control-Allow-Credentials", "true");
 
     expect(response.body).toEqual(game);
   });
@@ -204,7 +206,11 @@ describe("PUT /games/:id", () => {
 
 describe("DELETE  /games/:id", () => {
   test("Valid id", async () => {
-    const response = await request.delete("/games/1").expect(204).expect("Access-Control-Allow-Origin", "http://localhost:8080");
+    const response = await request
+      .delete("/games/1")
+      .expect(204)
+      .expect("Access-Control-Allow-Origin", "http://localhost:8080")
+      .expect("Access-Control-Allow-Credentials", "true");
 
     expect(response.text).toEqual("");
   });
@@ -241,14 +247,16 @@ describe("POST /games/:id/photo", () => {
       .post("/games/1000/photo")
       .attach("photo", "test-fixtures/photos/randomFile.png")
       .expect(201)
-      .expect("Access-Control-Allow-Origin", "http://localhost:8080");
+      .expect("Access-Control-Allow-Origin", "http://localhost:8080")
+      .expect("Access-Control-Allow-Credentials", "true");
   });
   test("valid request with JPG", async () => {
     await request
       .post("/games/1000/photo")
       .attach("photo", "test-fixtures/photos/randomFile.jpg")
       .expect(201)
-      .expect("Access-Control-Allow-Origin", "http://localhost:8080");
+      .expect("Access-Control-Allow-Origin", "http://localhost:8080")
+      .expect("Access-Control-Allow-Credentials", "true");
   });
 
   test("invalid request with TXT", async () => {
