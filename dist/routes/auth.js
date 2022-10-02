@@ -11,7 +11,7 @@ router.get("/login", (request, response, next) => {
     request.session.redirectTo = request.query.redirectTo;
     response.redirect("/auth/github/login");
 });
-router.get("/auth/github/login", passport_1.passport.authenticate("github", {
+router.get("/github/login", passport_1.passport.authenticate("github", {
     scope: ["user:email"],
 }));
 router.get("/github/callback", 

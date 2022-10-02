@@ -6,6 +6,8 @@ import {validate, gameSchema, GameData} from "../lib/middleware/validation";
 
 import {initMulterMiddleware} from "../lib/middleware/multer";
 
+import {checkAuthorization} from "../lib/middleware/passport";
+
 const upload = initMulterMiddleware();
 
 const router = Router();
@@ -29,7 +31,7 @@ router.get("/:id(\\d+)", async (request, response, next) => {
   response.json(game);
 });
 
-router.post("/", validate({body: gameSchema}), async (request, response) => {
+router.post("/", checkAuthorization, validate({body: gameSchema}), async (request, response) => {
   const gameData: GameData = request.body;
 
   const game = await prisma.games.create({
@@ -39,7 +41,7 @@ router.post("/", validate({body: gameSchema}), async (request, response) => {
   response.status(201).json(game);
 });
 
-router.put("/:id(\\d+)", validate({body: gameSchema}), async (request, response, next) => {
+router.put("/:id(\\d+)", checkAuthorization, validate({body: gameSchema}), async (request, response, next) => {
   const gameId = Number(request.params.id);
   const gameData: GameData = request.body;
 
@@ -55,7 +57,7 @@ router.put("/:id(\\d+)", validate({body: gameSchema}), async (request, response,
   }
 });
 
-router.delete("/:id(\\d+)", async (request, response, next) => {
+router.delete("/:id(\\d+)", checkAuthorization, async (request, response, next) => {
   const gameId = Number(request.params.id);
 
   try {
@@ -70,7 +72,7 @@ router.delete("/:id(\\d+)", async (request, response, next) => {
   }
 });
 
-router.post("/:id(\\d+)/photo", upload.single("photo"), async (request, response, next) => {
+router.post("/:id(\\d+)/photo", checkAuthorization, upload.single("photo"), async (request, response, next) => {
   if (!request.file) {
     response.status(400);
     return next("No photo file uploaded");

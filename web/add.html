@@ -7,6 +7,9 @@
     <title>Document</title>
   </head>
   <body>
+    <p>
+      <a href="http://localhost:3000/auth/login?redirectTo=http://localhost:8080/add">Login</a>
+    </p>
     <form action="http://localhost:3000/games" id="form-add">
       <label>
         <strong>Game:</strong>
@@ -39,6 +42,7 @@
             "Content-Type": "application/json",
           },
           body: formDataJsonString,
+          credentials: "include",
         });
 
         const game = await response.json();
@@ -48,7 +52,7 @@
 
       const addForm = document.getElementById("form-add");
 
-      addForm.addEventListener("submit", addGame)
+      addForm.addEventListener("submit", addGame);
     </script>
   </body>
 </html>
