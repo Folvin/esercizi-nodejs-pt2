@@ -33,9 +33,10 @@ router.get("/:id(\\d+)", async (request, response, next) => {
 
 router.post("/", checkAuthorization, validate({body: gameSchema}), async (request, response) => {
   const gameData: GameData = request.body;
+  const username = request.user?.username as string;
 
   const game = await prisma.games.create({
-    data: gameData,
+    data: {...gameData, createdBy: username, updatedBy: username},
   });
 
   response.status(201).json(game);
@@ -44,11 +45,12 @@ router.post("/", checkAuthorization, validate({body: gameSchema}), async (reques
 router.put("/:id(\\d+)", checkAuthorization, validate({body: gameSchema}), async (request, response, next) => {
   const gameId = Number(request.params.id);
   const gameData: GameData = request.body;
+  const username = request.user?.username as string;
 
   try {
     const game = await prisma.games.update({
       where: {id: gameId},
-      data: gameData,
+      data: {...gameData, updatedBy: username},
     });
     response.status(200).json(game);
   } catch (error) {

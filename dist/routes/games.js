@@ -50,18 +50,20 @@ router.get("/:id(\\d+)", async (request, response, next) => {
 });
 router.post("/", passport_1.checkAuthorization, (0, validation_1.validate)({ body: validation_1.gameSchema }), async (request, response) => {
     const gameData = request.body;
+    const username = request.user?.username;
     const game = await client_1.default.games.create({
-        data: gameData,
+        data: { ...gameData, createdBy: username, updatedBy: username },
     });
     response.status(201).json(game);
 });
 router.put("/:id(\\d+)", passport_1.checkAuthorization, (0, validation_1.validate)({ body: validation_1.gameSchema }), async (request, response, next) => {
     const gameId = Number(request.params.id);
     const gameData = request.body;
+    const username = request.user?.username;
     try {
         const game = await client_1.default.games.update({
             where: { id: gameId },
-            data: gameData,
+            data: { ...gameData, updatedBy: username },
         });
         response.status(200).json(game);
     }
